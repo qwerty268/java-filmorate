@@ -24,7 +24,7 @@ class UserControllerTest {
                 .email("lev-demchenko2003@yandex.ru")
                 .id(1)
                 .login("qwerty_268")
-                .nickName("QWERTY_268")
+                .name("QWERTY_268")
                 .build();
 
         user2 = User.builder()
@@ -32,7 +32,7 @@ class UserControllerTest {
                 .email("lev-demchenko2003@yandex.ru")
                 .id(2)
                 .login("qwerty_268")
-                .nickName("QWERTY_268")
+                .name("QWERTY_268")
                 .build();
     }
 

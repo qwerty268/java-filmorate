@@ -13,6 +13,6 @@ public class User {
     long id;
     String email;
     String login;
-    String nickName;
+    String name;
     LocalDate birthday;
 }
