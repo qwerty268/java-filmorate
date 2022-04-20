@@ -46,7 +46,7 @@ public class FilmController {
     private boolean filter(Film film) {
         if (film.getName().isBlank()
                 || film.getDescription().length() > 200
-                || film.getReleaseDate().isBefore(LocalDate.of(1985, 1, 28))
+                || film.getReleaseDate().isBefore(LocalDate.of(1895, 1, 28))
                 || film.getDuration().isNegative()) {
             log.error("Валидация не пройдена (Film)");
             throw new ValidationException("Переданы ошибочные данные для Film");
