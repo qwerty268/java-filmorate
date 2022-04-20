@@ -23,7 +23,7 @@ public class UserController {
         log.debug("Добавлен новый Use: {}", user);
     }
 
-    @PutMapping("/user")
+    @PutMapping("/users")
     public void putUser(@RequestBody User user) {
 
         if (filter(user)) {
@@ -32,7 +32,7 @@ public class UserController {
         log.debug("User {} обновлен", user);
     }
 
-    @GetMapping("/user")
+    @GetMapping("/users")
     public List<User> getUsers() {
         List<User> listOfUsers = new ArrayList<>();
         listOfUsers.addAll(users.values());
