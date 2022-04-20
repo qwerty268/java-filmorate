@@ -26,7 +26,7 @@ class FilmControllerTest {
         builder.setLength(300);
 
         film2 = Film.builder()
-                .dateOfRelease(LocalDate.of(2020, 11, 17))
+                .releaseDate(LocalDate.of(2020, 11, 17))
                 .description(builder.toString())
                 .id(2)
                 .duration(Duration.ofHours(1))
@@ -35,7 +35,7 @@ class FilmControllerTest {
 
 
         film1 = Film.builder()
-                .dateOfRelease(LocalDate.of(2020, 11, 17))
+                .releaseDate(LocalDate.of(2020, 11, 17))
                 .description("filmForTest1")
                 .id(1)
                 .duration(Duration.ofHours(1))
@@ -55,7 +55,7 @@ class FilmControllerTest {
 
         film2 = film2.toBuilder()
                 .description("filmForTest2")
-                .dateOfRelease(LocalDate.of(1700, 11, 17))
+                .releaseDate(LocalDate.of(1700, 11, 17))
                 .build();
 
         exception = assertThrows(ValidationException.class, () ->  controller.addFilm(film2));
@@ -63,7 +63,7 @@ class FilmControllerTest {
 
 
         film2 = film2.toBuilder()
-                .dateOfRelease(LocalDate.of(2020, 11, 17))
+                .releaseDate(LocalDate.of(2020, 11, 17))
                 .duration(Duration.ofHours(-1))
                 .build();
 
@@ -90,10 +90,10 @@ class FilmControllerTest {
     @Test
     void putFilmTest() {
         controller.addFilm(film1);
-        controller.putFilm(film1);
+        controller.updateFilm(film1);
         assertEquals(List.of(film1), controller.getFilms());
 
-        ValidationException exception = assertThrows(ValidationException.class, () ->  controller.putFilm(film2));
+        ValidationException exception = assertThrows(ValidationException.class, () ->  controller.updateFilm(film2));
         assertEquals(exception.getMessage(), "Переданы ошибочные данные для Film");
     }
 

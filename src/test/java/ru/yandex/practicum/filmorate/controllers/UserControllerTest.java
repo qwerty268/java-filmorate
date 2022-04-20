@@ -82,10 +82,10 @@ class UserControllerTest {
     @Test
     public void putUserTest() {
         controller.addUser(user1);
-        controller.putUser(user1);
+        controller.updateUser(user1);
         assertEquals(List.of(user1), controller.getUsers());
 
-        ValidationException exception = assertThrows(ValidationException.class, () ->  controller.putUser(user2));
+        ValidationException exception = assertThrows(ValidationException.class, () ->  controller.updateUser(user2));
         assertEquals(exception.getMessage(), "Переданы ошибочные данные для User");
     }
 

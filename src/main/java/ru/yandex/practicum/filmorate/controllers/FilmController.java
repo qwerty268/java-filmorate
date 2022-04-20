@@ -19,7 +19,7 @@ public class FilmController {
     private final Map<String, Film> films = new HashMap<>();
 
 
-    @PostMapping("/film")
+    @PostMapping("/films")
     public void addFilm(@RequestBody Film film) {
         if (filter(film)) {
             films.put(film.getName(), film);
@@ -27,15 +27,15 @@ public class FilmController {
         log.debug("Добавлен новый фильм: {}", film);
     }
 
-    @PutMapping("/film")
-    public void putFilm(@RequestBody Film film) {
+    @PutMapping("/films")
+    public void updateFilm(@RequestBody Film film) {
         if (filter(film)) {
             films.put(film.getName(), film);
         }
         log.debug("Обновлен {}", film);
     }
 
-    @GetMapping("/film")
+    @GetMapping("/films")
     public List<Film> getFilms() {
         List<Film> listOfFilms = new ArrayList<>();
         listOfFilms.addAll(films.values());
@@ -46,7 +46,7 @@ public class FilmController {
     private boolean filter(Film film) {
         if (film.getName().isBlank()
                 || film.getDescription().length() > 200
-                || film.getDateOfRelease().isBefore(LocalDate.of(1985, 1, 28))
+                || film.getReleaseDate().isBefore(LocalDate.of(1985, 1, 28))
                 || film.getDuration().isNegative()) {
             log.error("Валидация не пройдена (Film)");
             throw new ValidationException("Переданы ошибочные данные для Film");

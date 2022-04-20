@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public void putUser(@RequestBody User user) {
+    public void updateUser(@RequestBody User user) {
 
         if (filter(user)) {
                 users.put(user.getId(), user);

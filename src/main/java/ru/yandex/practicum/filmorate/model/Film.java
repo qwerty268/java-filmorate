@@ -13,6 +13,6 @@ public class Film {
     long id;
     String name;
     String description;
-    LocalDate dateOfRelease;
+    LocalDate releaseDate;
     Duration duration;
 }
