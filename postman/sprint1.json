@@ -80,7 +80,7 @@
 								}
 							},
 							"status": "OK",
-							"code": 200,
+							"code": 500,
 							"_postman_previewlanguage": "text",
 							"header": [
 								{
@@ -165,7 +165,7 @@
 								}
 							},
 							"status": "OK",
-							"code": 200,
+							"code": 500,
 							"_postman_previewlanguage": "text",
 							"header": [
 								{
