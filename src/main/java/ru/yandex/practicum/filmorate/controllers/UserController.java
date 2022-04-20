@@ -15,7 +15,7 @@ public class UserController {
 
     private final Map<Long, User> users = new HashMap<>();
 
-    @PostMapping("/user")
+    @PostMapping("/users")
     public void addUser(@RequestBody User user) {
         if (filter(user)) {
                 users.put(user.getId(), user);
