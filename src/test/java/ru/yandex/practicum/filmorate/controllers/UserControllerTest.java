@@ -42,7 +42,7 @@ class UserControllerTest {
         assertEquals(List.of(user1), controller.getUsers());
 
         ValidationException exception = assertThrows(ValidationException.class, () ->  controller.addUser(user2));
-        assertEquals(exception.getMessage(), "Переданы ошибочные данные для User");
+        assertEquals(exception.getMessage(), "Переданы ошибочные данные для User: Вы из будущего?");
 
 
         user2 = user2.toBuilder()
@@ -51,7 +51,7 @@ class UserControllerTest {
                 .build();
 
         exception = assertThrows(ValidationException.class, () ->  controller.addUser(user2));
-        assertEquals(exception.getMessage(), "Переданы ошибочные данные для User");
+        assertEquals(exception.getMessage(), "Переданы ошибочные данные для User: Email пустой.");
 
 
         user2 = user2.toBuilder()
@@ -59,7 +59,7 @@ class UserControllerTest {
                 .build();
 
         exception = assertThrows(ValidationException.class, () ->  controller.addUser(user2));
-        assertEquals(exception.getMessage(), "Переданы ошибочные данные для User");
+        assertEquals(exception.getMessage(), "Переданы ошибочные данные для User: Email должен содержаь @.");
 
 
         user2 = user2.toBuilder()
@@ -68,7 +68,7 @@ class UserControllerTest {
                 .build();
 
         exception = assertThrows(ValidationException.class, () ->  controller.addUser(user2));
-        assertEquals(exception.getMessage(), "Переданы ошибочные данные для User");
+        assertEquals(exception.getMessage(), "Переданы ошибочные данные для User: Логин не должен быть пустым.");
 
         user2 = user2.toBuilder()
                 .login("qwerty_268")
@@ -86,7 +86,7 @@ class UserControllerTest {
         assertEquals(List.of(user1), controller.getUsers());
 
         ValidationException exception = assertThrows(ValidationException.class, () ->  controller.updateUser(user2));
-        assertEquals(exception.getMessage(), "Переданы ошибочные данные для User");
+        assertEquals(exception.getMessage(), "Переданы ошибочные данные для User: Вы из будущего?");
     }
 
     @Test

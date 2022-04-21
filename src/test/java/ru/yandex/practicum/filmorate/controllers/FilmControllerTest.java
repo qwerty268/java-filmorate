@@ -1,7 +1,5 @@
 package ru.yandex.practicum.filmorate.controllers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
@@ -11,11 +9,12 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FilmControllerTest {
     private FilmController controller;
-    private  Film film1;
+    private Film film1;
     private Film film2;
 
     @BeforeEach
@@ -49,8 +48,9 @@ class FilmControllerTest {
         assertEquals(List.of(film1), controller.getFilms());
 
 
-        ValidationException exception = assertThrows(ValidationException.class, () ->  controller.addFilm(film2));
-        assertEquals(exception.getMessage(), "Переданы ошибочные данные для Film");
+        ValidationException exception = assertThrows(ValidationException.class, () -> controller.addFilm(film2));
+        assertEquals(exception.getMessage(),
+                "Переданы ошибочные данные для Film: Описание содержит больше, чем 200 символов.");
 
 
         film2 = film2.toBuilder()
@@ -58,8 +58,9 @@ class FilmControllerTest {
                 .releaseDate(LocalDate.of(1700, 11, 17))
                 .build();
 
-        exception = assertThrows(ValidationException.class, () ->  controller.addFilm(film2));
-        assertEquals(exception.getMessage(), "Переданы ошибочные данные для Film");
+        exception = assertThrows(ValidationException.class, () -> controller.addFilm(film2));
+        assertEquals(exception.getMessage(),
+                "Переданы ошибочные данные для Film: Дата релиза введена некорректно.");
 
 
         film2 = film2.toBuilder()
@@ -67,8 +68,9 @@ class FilmControllerTest {
                 .duration(Duration.ofHours(-1))
                 .build();
 
-        exception = assertThrows(ValidationException.class, () ->  controller.addFilm(film2));
-        assertEquals(exception.getMessage(), "Переданы ошибочные данные для Film");
+        exception = assertThrows(ValidationException.class, () -> controller.addFilm(film2));
+        assertEquals(exception.getMessage(),
+                "Переданы ошибочные данные для Film: Введена отрицательная продолжительность фильма.");
 
 
         film2 = film2.toBuilder()
@@ -76,15 +78,15 @@ class FilmControllerTest {
                 .name("")
                 .build();
 
-        exception = assertThrows(ValidationException.class, () ->  controller.addFilm(film2));
-        assertEquals(exception.getMessage(), "Переданы ошибочные данные для Film");
+        exception = assertThrows(ValidationException.class, () -> controller.addFilm(film2));
+        assertEquals(exception.getMessage(), "Переданы ошибочные данные для Film: Передано пустое имя.");
 
         film2 = film2.toBuilder()
                 .name("film2")
                 .build();
 
         controller.addFilm(film2);
-        assertEquals(List.of(film2, film1), controller.getFilms());
+        assertEquals(List.of(film1, film2), controller.getFilms());
     }
 
     @Test
@@ -93,8 +95,9 @@ class FilmControllerTest {
         controller.updateFilm(film1);
         assertEquals(List.of(film1), controller.getFilms());
 
-        ValidationException exception = assertThrows(ValidationException.class, () ->  controller.updateFilm(film2));
-        assertEquals(exception.getMessage(), "Переданы ошибочные данные для Film");
+        ValidationException exception = assertThrows(ValidationException.class, () -> controller.updateFilm(film2));
+        assertEquals(exception.getMessage(),
+                "Переданы ошибочные данные для Film: Описание содержит больше, чем 200 символов.");
     }
 
     @Test
