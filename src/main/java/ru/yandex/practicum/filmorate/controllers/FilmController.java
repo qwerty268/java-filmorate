@@ -24,7 +24,7 @@ public class FilmController {
         if (filter(film)) {
             films.put(film.getName(), film);
         }
-        log.debug("Добавлен новый фильм: {}", film);
+        log.debug("Добавлн новый фильм: {}", film);
     }
 
     @PutMapping("/films")
