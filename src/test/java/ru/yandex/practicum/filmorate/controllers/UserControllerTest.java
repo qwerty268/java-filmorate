@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.controllers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -14,10 +16,12 @@ class UserControllerTest {
     private UserController controller;
     private User user1;
     private User user2;
+    @Autowired
+    private ApplicationContext context;
 
     @BeforeEach
     public void beforeEach() {
-        controller = new UserController();
+        controller = context.getBean(UserController.class);
 
         user1 = User.builder()
                 .birthday(LocalDate.of(2000, 10, 20))

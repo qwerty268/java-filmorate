@@ -2,8 +2,13 @@ package ru.yandex.practicum.filmorate.controllers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -13,13 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FilmControllerTest {
-    private FilmController controller;
+    private FilmService controller = new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage());
     private Film film1;
     private Film film2;
 
+
     @BeforeEach
     public void beforeEach() {
-        controller = new FilmController();
 
         StringBuilder builder = new StringBuilder();
         builder.setLength(300);

@@ -1,18 +1,38 @@
 package ru.yandex.practicum.filmorate.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-    private final UserStorage storage = new InMemoryUserStorage();
+    private final UserStorage storage;
+
+    @Autowired
+    public UserService(UserStorage storage) {
+        this.storage = storage;
+    }
+
+    public void addUser(User user) {
+        storage.addUser(user);
+    }
+
+    public void updateUser(User user) {
+        storage.updateUser(user);
+    }
+
+    public List<User> getUsers() {
+        return storage.getUsers();
+    }
+
+    public User getUserById(Long id) {
+        return storage.getUserById(id);
+    }
 
     public void addFriend(Long id, Long friendId) {
         User user1 = storage.getUserById(id);

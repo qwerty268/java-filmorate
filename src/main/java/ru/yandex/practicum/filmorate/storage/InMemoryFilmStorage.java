@@ -40,6 +40,11 @@ public class InMemoryFilmStorage implements FilmStorage {
         return listOfFilms;
     }
 
+    @Override
+    public Film getFilmById(Long id) {
+        return films.get(id);
+    }
+
     private boolean filter(Film film) {
         StringBuilder builder = new StringBuilder();
         if (film.getName().isBlank()) {
