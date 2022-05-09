@@ -11,13 +11,13 @@ import ru.yandex.practicum.filmorate.exceptions.UserDoesNotExistException;
 public class ExceptionsController {
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleFilmDoesNotExistException(final FilmDoesNotExistException e) {
         return e.getMessage();
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleUserDoesNotExistException(final UserDoesNotExistException e) {
         return e.getMessage();
     }

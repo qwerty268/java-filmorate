@@ -54,12 +54,15 @@ public class FilmService {
 
     public List<Film> getMostLikedFilms(Integer count) {
         List<Film> films = filmStorage.getFilms();
-        films.sort(Comparator.comparingInt(film -> film.getLikes().size()));
+        films.sort(Comparator.comparingInt((Film film) -> film.getLikes().size()).reversed());
 
         if (count == 0) {
+            if (films.size() < 10) {
+                return films;
+            }
             films = films.subList(0, 9);
         } else {
-            films = films.subList(0, count - 1);
+            films = films.subList(0, count);
         }
         return films;
     }

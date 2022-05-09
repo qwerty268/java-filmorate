@@ -21,8 +21,9 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public void addUser(@RequestBody User user) {
+    public User addUser(@RequestBody User user) {
         service.addUser(user);
+        return user;
     }
 
     @PutMapping("/users")
@@ -33,6 +34,11 @@ public class UserController {
     @GetMapping("/users")
     public List<User> getUsers() {
         return service.getUsers();
+    }
+
+    @GetMapping("/users/{id}")
+    public User getUser(@PathVariable Long id) {
+        return service.getUserById(id);
     }
 
     @PutMapping("/users/{id}/friends/{friendId}")

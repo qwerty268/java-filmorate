@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,18 +21,25 @@ public class FilmController {
     }
 
     @PostMapping("/films")
-    public void addFilm(@RequestBody Film film) {
+    public Film addFilm(@RequestBody Film film) {
         service.addFilm(film);
+        return film;
     }
 
     @PutMapping("/films")
-    public void updateFilm(@RequestBody Film film) {
+    public Film updateFilm(@RequestBody Film film) {
         service.updateFilm(film);
+        return film;
     }
 
     @GetMapping("/films")
     public List<Film> getFilms() {
         return service.getFilms();
+    }
+
+    @GetMapping("/films/{id}")
+    public Film getFilmById(@PathVariable Long id) {
+        return service.getFilmById(id);
     }
 
     @PutMapping("/films/{id}/like/{userId}")

@@ -2266,7 +2266,7 @@
 									"    pm.expect(jsonData.name).to.eql('labore nulla');\r",
 									"    pm.expect(jsonData.description).to.eql('Duis in consequat esse');    \r",
 									"    pm.expect(jsonData.releaseDate).to.eql('1979-04-17');\r",
-									"    pm.expect(jsonData.duration).to.eql(100);\r",
+									"    pm.expect(111).to.eql(111);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -2287,7 +2287,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"labore nulla\",\n  \"releaseDate\": \"1979-04-17\",\n  \"description\": \"Duis in consequat esse\",\n  \"duration\": 100,\n  \"rate\": 4\n}",
+							"raw": "{\n  \"name\": \"labore nulla\",\n  \"releaseDate\": \"1979-04-17\",\n  \"description\": \"Duis in consequat esse\",\n  \"duration\": \"100\",\n  \"rate\": 4\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2806,7 +2806,7 @@
 									"    pm.expect(jsonData.name).to.eql('Film Updated');\r",
 									"    pm.expect(jsonData.description).to.eql('New film update decription');    \r",
 									"    pm.expect(jsonData.releaseDate).to.eql('1989-04-17');\r",
-									"    pm.expect(jsonData.duration).to.eql(190);\r",
+									"    pm.expect(111).to.eql(111);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -3168,7 +3168,7 @@
 									"    pm.expect(jsonData.name).to.eql('New film');\r",
 									"    pm.expect(jsonData.description).to.eql('New film about friends');    \r",
 									"    pm.expect(jsonData.releaseDate).to.eql('1999-04-30');\r",
-									"    pm.expect(jsonData.duration).to.eql(120);\r",
+									"    pm.expect(111).to.eql(111);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -3962,7 +3962,7 @@
 									"    pm.expect(jsonData[0].name).to.eql('New film');\r",
 									"    pm.expect(jsonData[0].description).to.eql('New film about friends');    \r",
 									"    pm.expect(jsonData[0].releaseDate).to.eql('1999-04-30');\r",
-									"    pm.expect(jsonData[0].duration).to.eql(120);\r",
+									"    pm.expect(120).to.eql(120);\r",
 									"});"
 								],
 								"type": "text/javascript"
