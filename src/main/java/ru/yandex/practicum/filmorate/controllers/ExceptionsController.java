@@ -25,6 +25,6 @@ public class ExceptionsController {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleThrowable(final Throwable e) {
-        return e.getMessage();
+        return "Неизвестная ошибка";
     }
 }

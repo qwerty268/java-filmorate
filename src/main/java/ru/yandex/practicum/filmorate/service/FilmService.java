@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.exceptions.FilmDoesNotExistException;
 import ru.yandex.practicum.filmorate.exceptions.UserDoesNotExistException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Comparator;
@@ -13,12 +14,11 @@ import java.util.List;
 
 @Service
 public class FilmService {
-    private final FilmStorage filmStorage;
+    private final FilmStorage filmStorage = new InMemoryFilmStorage();
     private final UserStorage userStorage;
 
     @Autowired
-    public FilmService(FilmStorage storage, UserStorage userStorage) {
-        this.filmStorage = storage;
+    public FilmService(UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
