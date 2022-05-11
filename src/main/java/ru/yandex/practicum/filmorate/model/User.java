@@ -9,8 +9,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-/* анотация @Value делает все поля приватными и финальными, а также добавляет геттеры.
- Изменение полей идет через копирование объекта*/
+
 @Data
 @Builder(toBuilder = true)
 public class User {
@@ -21,6 +20,7 @@ public class User {
     private LocalDate birthday;
     private Set<Long> friends;
 
+    //в тестах передаётся объект User без friends, поэтому приходиться делать проверку notNull
 
     public void addFriend(User user) {
         if (friends == null) {

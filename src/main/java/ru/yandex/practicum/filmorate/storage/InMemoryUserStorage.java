@@ -1,24 +1,20 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.UserDoesNotExistException;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exceptions.ValidationErrorException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
-@Component
+@Service
 public class InMemoryUserStorage implements UserStorage {
 
     private final Map<Long, User> users = new HashMap<>();
 
-    private static Long ID = 1L;
+    private static Long userId = 1L;
 
     @Override
     public void addUser(User user) {
@@ -46,12 +42,8 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User getUserById(Long id) {
-        if (users.get(id) == null) {
-            throw new UserDoesNotExistException(id);
-        }
-
-        return users.get(id);
+    public Optional<User> getUserById(Long id) {
+        return Optional.ofNullable(users.get(id));
     }
 
 
@@ -82,7 +74,7 @@ public class InMemoryUserStorage implements UserStorage {
             }
 
             log.error("Валидация не пройдена (User):" + cause);
-            throw new ValidationException("Переданы ошибочные данные для User:" + cause);
+            throw new ValidationErrorException("Переданы ошибочные данные для User:" + cause);
         }
 
         return true;
@@ -90,8 +82,8 @@ public class InMemoryUserStorage implements UserStorage {
 
     private void createId(User user) {
         if (user.getId() == 0) {
-            user.setId(ID);
-            ID++;
+            user.setId(userId);
+            userId++;
         }
     }
 }
