@@ -1,76 +1,64 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
 public class UserController {
 
-    private final Map<Long, User> users = new HashMap<>();
+    private final UserService service;
+
+    @Autowired
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
     @PostMapping("/users")
-    public void addUser(@RequestBody User user) {
-        if (filter(user)) {
-            users.put(user.getId(), user);
-        }
-        log.debug("Добавлен новый Use: {}", user);
+    public User addUser(@RequestBody User user) {
+        service.addUser(user);
+        return user;
     }
 
     @PutMapping("/users")
-    public void updateUser(@RequestBody User user) {
-
-        if (filter(user)) {
-            users.put(user.getId(), user);
-        }
-        log.debug("User {} обновлен", user);
+    public User updateUser(@RequestBody User user) {
+        service.updateUser(user);
+        return user;
     }
 
     @GetMapping("/users")
     public List<User> getUsers() {
-        List<User> listOfUsers = new ArrayList<>(users.values());
-        return listOfUsers;
+        return service.getUsers();
     }
 
+    @GetMapping("/users/{id}")
+    public User getUser(@PathVariable Long id) {
+        return service.getUserById(id);
+    }
 
-    private boolean filter(User user) {
-        StringBuilder builder = new StringBuilder();
+    @PutMapping("/users/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        service.addFriend(id, friendId);
+    }
 
-        if (user.getEmail().isBlank()) {
-            builder.append(" Email пустой;");
-        } else if (!user.getEmail().contains("@")) {
-            builder.append(" Email должен содержаь @;");
-        }
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public void deleteFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        service.deleteFriend(id, friendId);
+    }
 
-        if (user.getLogin().isBlank()) {
-            builder.append(" Логин не должен быть пустым;");
-        } else if (user.getLogin().contains(" ")) {
-            builder.append(" Логин не должен содержать пробелы;");
-        }
+    @GetMapping("/users/{id}/friends")
+    public List<User> getFriends(@PathVariable Long id) {
+        return service.getFriends(id);
+    }
 
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            builder.append(" Вы из будущего?");
-        }
-
-        String cause = builder.toString();
-        if (!cause.isBlank()) {
-
-            if (!cause.contains("?")) {
-                cause = builder.replace(builder.length() - 1, builder.length(), ".").toString();
-            }
-
-            log.error("Валидация не пройдена (User):" + cause);
-            throw new ValidationException("Переданы ошибочные данные для User:" + cause);
-        }
-
-        return true;
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@PathVariable Long id, @PathVariable Long otherId) {
+        return service.getCommonFriends(id, otherId);
     }
 }
