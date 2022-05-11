@@ -54,9 +54,8 @@ public class FilmController {
     }
 
     @GetMapping("/films/popular")
-    public List<Film> getMostLikedFilms(@RequestParam Optional<Integer> count) {
-        int size = count.orElse(0);
-        return service.getMostLikedFilms(size);
+    public List<Film> getMostLikedFilms(@RequestParam(defaultValue = "10", required = false) Integer count) {
+        return service.getMostLikedFilms(count);
     }
 
 }

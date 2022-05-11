@@ -6,7 +6,6 @@ import ru.yandex.practicum.filmorate.exceptions.FilmDoesNotExistException;
 import ru.yandex.practicum.filmorate.exceptions.UserDoesNotExistException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Comparator;
@@ -37,7 +36,7 @@ public class FilmService {
 
     public Film getFilmById(Long id) {
         return filmStorage.getFilmById(id).orElseThrow(() -> new FilmDoesNotExistException(id));
-}
+    }
 
 
     public void putLike(Long filmId, Long userId) {
@@ -56,12 +55,7 @@ public class FilmService {
         List<Film> films = filmStorage.getFilms();
         films.sort(Comparator.comparingInt((Film film) -> film.getLikes().size()).reversed());
 
-        if (count == 0) {
-            if (films.size() < 10) {
-                return films;
-            }
-            films = films.subList(0, 9);
-        } else {
+        if (films.size() >= count) {
             films = films.subList(0, count);
         }
         return films;
