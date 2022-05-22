@@ -19,7 +19,7 @@ public class User {
     private String name;
     private LocalDate birthday;
     private Set<Long> friends;
-
+    private Status status;
 
     public void addFriend(User user) {
         friends.add(user.getId());
@@ -29,3 +29,8 @@ public class User {
         friends.remove(user);
     }
 }
+
+    enum Status {
+        CONFIRMED,
+        UNCONFIRMED
+    }

@@ -14,12 +14,13 @@ import java.util.Set;
 @Data
 @Builder(toBuilder = true)
 public class Film {
-    long id;
-    String name;
-    String description;
-    LocalDate releaseDate;
-    Duration duration;
-    Set<Long> likes;
+    private long id;
+    private String name;
+    private String description;
+    private LocalDate releaseDate;
+    private Duration duration;
+    private Set<Long> likes;
+    private Genre genre;
 
     public void putLike(Long userId) {
         likes.add(userId);
@@ -30,3 +31,19 @@ public class Film {
     }
 }
 
+enum Genre {
+    COMEDY,
+    DRAMA,
+    THRILLER,
+    DOCUMENTARY,
+    ACTION,
+    CARTOON
+}
+
+enum MPA {
+    G,
+    PG,
+    PG13,
+    R,
+    NC17
+}
