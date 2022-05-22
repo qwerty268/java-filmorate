@@ -2,7 +2,9 @@ package ru.yandex.practicum.filmorate.controllers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import ru.yandex.practicum.filmorate.exceptions.ValidationErrorException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -14,10 +16,12 @@ class UserControllerTest {
     private UserController controller;
     private User user1;
     private User user2;
+    @Autowired
+    private ApplicationContext context;
 
     @BeforeEach
     public void beforeEach() {
-        controller = new UserController();
+        controller = context.getBean(UserController.class);
 
         user1 = User.builder()
                 .birthday(LocalDate.of(2000, 10, 20))
@@ -41,7 +45,7 @@ class UserControllerTest {
         controller.addUser(user1);
         assertEquals(List.of(user1), controller.getUsers());
 
-        ValidationException exception = assertThrows(ValidationException.class, () ->  controller.addUser(user2));
+        ValidationErrorException exception = assertThrows(ValidationErrorException.class, () ->  controller.addUser(user2));
         assertEquals(exception.getMessage(), "Переданы ошибочные данные для User: Вы из будущего?");
 
 
@@ -50,7 +54,7 @@ class UserControllerTest {
                 .email(" ")
                 .build();
 
-        exception = assertThrows(ValidationException.class, () ->  controller.addUser(user2));
+        exception = assertThrows(ValidationErrorException.class, () ->  controller.addUser(user2));
         assertEquals(exception.getMessage(), "Переданы ошибочные данные для User: Email пустой.");
 
 
@@ -58,7 +62,7 @@ class UserControllerTest {
                 .email("lev-demchenko2003-yandex.ru")
                 .build();
 
-        exception = assertThrows(ValidationException.class, () ->  controller.addUser(user2));
+        exception = assertThrows(ValidationErrorException.class, () ->  controller.addUser(user2));
         assertEquals(exception.getMessage(), "Переданы ошибочные данные для User: Email должен содержаь @.");
 
 
@@ -67,7 +71,7 @@ class UserControllerTest {
                 .login(" ")
                 .build();
 
-        exception = assertThrows(ValidationException.class, () ->  controller.addUser(user2));
+        exception = assertThrows(ValidationErrorException.class, () ->  controller.addUser(user2));
         assertEquals(exception.getMessage(), "Переданы ошибочные данные для User: Логин не должен быть пустым.");
 
         user2 = user2.toBuilder()
@@ -85,7 +89,7 @@ class UserControllerTest {
         controller.updateUser(user1);
         assertEquals(List.of(user1), controller.getUsers());
 
-        ValidationException exception = assertThrows(ValidationException.class, () ->  controller.updateUser(user2));
+        ValidationErrorException exception = assertThrows(ValidationErrorException.class, () ->  controller.updateUser(user2));
         assertEquals(exception.getMessage(), "Переданы ошибочные данные для User: Вы из будущего?");
     }
 

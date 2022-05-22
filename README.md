@@ -1,2 +1,3 @@
 # java-filmorate
-Template repository for Filmorate project.
+
+https://dbdiagram.io/d/628ab4ddf040f104c174eec8
