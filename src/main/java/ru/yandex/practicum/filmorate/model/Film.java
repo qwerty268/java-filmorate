@@ -7,6 +7,7 @@ import lombok.Value;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 /* анотация @Value делает все поля приватными и финальными, а также добавляет геттеры.
@@ -23,6 +24,9 @@ public class Film {
     private Genre genre;
 
     public void putLike(Long userId) {
+        if (likes == null) {
+            likes = new HashSet<>();
+        }
         likes.add(userId);
     }
 
