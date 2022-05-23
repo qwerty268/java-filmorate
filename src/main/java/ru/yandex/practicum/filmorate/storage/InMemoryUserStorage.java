@@ -1,37 +1,38 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exceptions.ValidationErrorException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
-@Component
-public class InMemoryUserStorage implements  UserStorage {
+@Service
+public class InMemoryUserStorage implements UserStorage {
 
     private final Map<Long, User> users = new HashMap<>();
+
+    private static Long userId = 1L;
 
     @Override
     public void addUser(User user) {
         if (filter(user)) {
+            createId(user);
             users.put(user.getId(), user);
+            log.debug("Добавлен новый User: {}", user);
         }
-        log.debug("Добавлен новый Use: {}", user);
     }
 
     @Override
     public void updateUser(User user) {
 
-        if (filter(user)) {
+        if (filter(user) && users.get(user.getId()) != null) {
+
             users.put(user.getId(), user);
+            log.debug("User {} обновлен", user);
         }
-        log.debug("User {} обновлен", user);
     }
 
     @Override
@@ -41,11 +42,9 @@ public class InMemoryUserStorage implements  UserStorage {
     }
 
     @Override
-    public User getUserById(Long id) {
-        return users.get(id);
+    public Optional<User> getUserById(Long id) {
+        return Optional.ofNullable(users.get(id));
     }
-
-
 
 
     private boolean filter(User user) {
@@ -75,9 +74,16 @@ public class InMemoryUserStorage implements  UserStorage {
             }
 
             log.error("Валидация не пройдена (User):" + cause);
-            throw new ValidationException("Переданы ошибочные данные для User:" + cause);
+            throw new ValidationErrorException("Переданы ошибочные данные для User:" + cause);
         }
 
         return true;
+    }
+
+    private void createId(User user) {
+        if (user.getId() == 0) {
+            user.setId(userId);
+            userId++;
+        }
     }
 }

@@ -17,11 +17,10 @@ public class FilmService {
     private final UserStorage userStorage;
 
     @Autowired
-    public FilmService(FilmStorage storage, UserStorage userStorage) {
-        this.filmStorage = storage;
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+        this.filmStorage = filmStorage;
         this.userStorage = userStorage;
     }
-
 
     public void addFilm(Film film) {
         filmStorage.addFilm(film);
@@ -36,41 +35,30 @@ public class FilmService {
     }
 
     public Film getFilmById(Long id) {
-        return filmStorage.getFilmById(id);
+        return filmStorage.getFilmById(id).orElseThrow(() -> new FilmDoesNotExistException(id));
     }
 
 
     public void putLike(Long filmId, Long userId) {
-        checkingForNotNullValues(filmId, userId);
+        userStorage.getUserById(userId).orElseThrow(() -> new UserDoesNotExistException(userId));
 
-        filmStorage.getFilmById(filmId).putLike(userId);
+        filmStorage.getFilmById(filmId).orElseThrow(() -> new FilmDoesNotExistException(filmId)).putLike(userId);
     }
 
     public void removeLike(Long filmId, Long userId) {
-        checkingForNotNullValues(filmId, userId);
+        userStorage.getUserById(userId).orElseThrow(() -> new UserDoesNotExistException(userId));
 
-        filmStorage.getFilmById(filmId).removeLike(userId);
+        filmStorage.getFilmById(filmId).orElseThrow(() -> new FilmDoesNotExistException(filmId)).removeLike(userId);
     }
 
     public List<Film> getMostLikedFilms(Integer count) {
         List<Film> films = filmStorage.getFilms();
-        films.sort(Comparator.comparingInt(film -> film.getLikes().size()));
+        films.sort(Comparator.comparingInt((Film film) -> film.getLikes().size()).reversed());
 
-        if (count == 0) {
-            films = films.subList(0, 9);
-        } else {
-            films = films.subList(0, count - 1);
+        if (films.size() >= count) {
+            films = films.subList(0, count);
         }
         return films;
     }
 
-    private void checkingForNotNullValues(Long filmId, Long userId) {
-        if (userStorage.getUserById(userId) == null) {
-            throw new UserDoesNotExistException(userId);
-        }
-
-        if (filmStorage.getFilmById(filmId) == null) {
-            throw new FilmDoesNotExistException(filmId);
-        }
-    }
 }
