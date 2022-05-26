@@ -1,5 +1,6 @@
 # java-filmorate
 
+!!!В этом редакторе нет связи многое ко многим!!!
 https://dbdiagram.io/d/628ab4ddf040f104c174eec8
 
 
