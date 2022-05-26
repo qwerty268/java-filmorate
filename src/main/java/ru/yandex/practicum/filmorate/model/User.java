@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.Value;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 /* анотация @Value делает все поля приватными и финальными, а также добавляет геттеры.
@@ -22,6 +23,9 @@ public class User {
     private Status status;
 
     public void addFriend(User user) {
+        if (friends == null) {
+            friends = new HashSet<>();
+        }
         friends.add(user.getId());
     }
 
