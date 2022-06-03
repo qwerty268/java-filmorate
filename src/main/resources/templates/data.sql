@@ -9,6 +9,6 @@ INSERT INTO Genre (6, "ACTION MOVIE");
 /*MPA*/
 INSERT INTO mpa_rating (1, "G");
 INSERT INTO mpa_rating (2, "PG");
-INSERT INTO mpa_rating (3, "PG-13");
+INSERT INTO mpa_rating (3, "PG13");
 INSERT INTO mpa_rating (4, "R");
-INSERT INTO mpa_rating (5, "NC-17");
+INSERT INTO mpa_rating (5, "NC17");
