@@ -22,6 +22,7 @@ public class Film {
     private Duration duration;
     private Set<Long> likes;
     private Genre genre;
+    private MPA rating;
 
     public void putLike(Long userId) {
         if (likes == null) {
@@ -32,6 +33,22 @@ public class Film {
 
     public void removeLike(Long userId) {
         likes.remove(userId);
+    }
+
+    public Integer getMPARating() {
+        switch (rating) {
+            case G:
+                return 1;
+            case PG:
+                return 2;
+            case PG13:
+                return 3;
+            case R:
+                return 4;
+            case NC17:
+                return 5;
+        }
+        return null;
     }
 }
 

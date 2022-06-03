@@ -4,9 +4,9 @@ CREATE TABLE IF NOT EXISTS Genre
     genre    VARCHAR
 );
 
-CREATE TABLE IF NOT EXISTS mpaa_rating
+CREATE TABLE IF NOT EXISTS mpa_rating
 (
-    mpaa_rating_id INTEGER PRIMARY KEY,
+    mpa_rating_id INTEGER PRIMARY KEY,
     rating_value   VARCHAR
 );
 
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS Film
     description  TEXT,
     release_date DATE,
     duration     INTERVAL SECOND,
-    mpaa_rating  INTEGER REFERENCES mpaa_rating (mpaa_rating_id)
+    mpa_rating  INTEGER REFERENCES mpa_rating (mpa_rating_id)
 );
 
 CREATE TABLE IF NOT EXISTS Film_genre
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS Friend
     status         BOOLEAN
 );
 
-CREATE TABLE IF NOT EXISTS Likes
+CREATE TABLE IF NOT EXISTS Like
 (
     film_id INTEGER REFERENCES Film (id),
     user_id INTEGER REFERENCES User (id)
