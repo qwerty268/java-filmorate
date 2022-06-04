@@ -93,8 +93,9 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private List<Genre> getGenreFromSQL(Integer filmId) {
-        String sqlQuery = "SELECT g.genre FROM Film_genre AS fg WHERE film_id = ? " +
-                " LEFT JOIN Genre AS g ON ge.genre_id = fg.genre_id";
+        String sqlQuery = "SELECT g.genre FROM Film_genre AS fg " +
+                " LEFT JOIN Genre AS g ON g.genre_id = fg.genre_id " +
+                "WHERE fg.film_id = ?";
 
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> Genre.valueOf(rs.getString("genre")), filmId);
     }
@@ -116,9 +117,11 @@ public class FilmDbStorage implements FilmStorage {
 
         String likeInSqlQuery = "INSERT INTO Likes VALUES (?, ?)";
 
-        film.getLikes().forEach((userId) ->
-                jdbcTemplate.update(likeInSqlQuery, film.getId(), userId)
-        );
+        if (film.getLikes() != null) {
+            film.getLikes().forEach((userId) ->
+                    jdbcTemplate.update(likeInSqlQuery, film.getId(), userId)
+            );
+        }
     }
 
     private void updateGenres(Film film) {
@@ -127,9 +130,11 @@ public class FilmDbStorage implements FilmStorage {
 
         String genreInSqlQuery = "INSERT INTO Film_genre VALUES (?, ?)";
 
-        film.getGenre().forEach((genre) ->
-                jdbcTemplate.update(genreInSqlQuery, film.getId(), GenreToSQL(genre))
-        );
+        if (film.getGenre() != null) {
+            film.getGenre().forEach((genre) ->
+                    jdbcTemplate.update(genreInSqlQuery, film.getId(), GenreToSQL(genre))
+            );
+        }
     }
 
     private Integer GenreToSQL(Genre genre) {
