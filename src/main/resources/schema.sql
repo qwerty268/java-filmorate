@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS Film
     name         VARCHAR NOT NULL,
     description  TEXT,
     release_date DATE,
-    duration     INTERVAL SECOND,
+    duration     LONG,
     mpa_rating  INTEGER REFERENCES mpa_rating (mpa_rating_id)
 );
 
@@ -43,8 +43,8 @@ CREATE TABLE IF NOT EXISTS Friend
     status         BOOLEAN
 );
 
-CREATE TABLE IF NOT EXISTS Like
+CREATE TABLE IF NOT EXISTS Likes
 (
-    film_id INTEGER REFERENCES Film (id),
+    film_id INTEGER PRIMARY KEY REFERENCES Film (id),
     user_id INTEGER REFERENCES User (id)
-)
+);

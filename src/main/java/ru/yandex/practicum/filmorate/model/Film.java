@@ -3,11 +3,13 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /* анотация @Value делает все поля приватными и финальными, а также добавляет геттеры.
@@ -21,8 +23,22 @@ public class Film {
     private LocalDate releaseDate;
     private Duration duration;
     private Set<Long> likes;
-    private Genre genre;
+    private List<Genre> genre;
     private MPA rating;
+
+
+    public Film(long id, String name, String description, LocalDate releaseDate, Duration duration, Set<Long> likes, List<Genre> genre, MPA rating) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.likes = likes;
+
+        this.genre = genre;
+
+        this.rating = rating;
+    }
 
     public void putLike(Long userId) {
         if (likes == null) {
@@ -35,7 +51,7 @@ public class Film {
         likes.remove(userId);
     }
 
-    public Integer getMPARating() {
+    public Integer getMPARatingSQL() {
         switch (rating) {
             case G:
                 return 1;
@@ -50,21 +66,6 @@ public class Film {
         }
         return null;
     }
+
 }
 
-enum Genre {
-    COMEDY,
-    DRAMA,
-    THRILLER,
-    DOCUMENTARY,
-    ACTION,
-    CARTOON
-}
-
-enum MPA {
-    G,
-    PG,
-    PG13,
-    R,
-    NC17
-}
