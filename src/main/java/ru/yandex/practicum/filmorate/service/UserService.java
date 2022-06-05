@@ -3,12 +3,13 @@ package ru.yandex.practicum.filmorate.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.UserDoesNotExistException;
-import ru.yandex.practicum.filmorate.exceptions.ValidationErrorException;
+import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -54,25 +55,27 @@ public class UserService {
     }
 
     public List<User> getFriends(Long id) {
-        Set<Long> idOfFriends = getUserById(id).getFriends();
+        Set<Friendship> friendshipsOfUser = getUserById(id).getFriends();
         List<User> friends = new ArrayList<>();
 
-        idOfFriends.stream()
-                .forEach((idOfFriend) -> friends.add(getUserById(idOfFriend)));
+        friendshipsOfUser.stream()
+                .forEach((friendship) -> {
+                    friends.add(getUserById(friendship.getUser2()));
+                });
 
         return friends;
     }
 
     public List<User> getCommonFriends(Long id, Long otherId) {
-        Set<Long> friendsId1 = getUserById(id).getFriends();
-        Set<Long> friendsId2 = getUserById(otherId).getFriends();
+        Set<User> friends1 = new HashSet<>(getFriends(id));
+        Set<User> friends2 = new HashSet<>(getFriends(otherId));
 
         List<User> friends = new ArrayList<>();
 
         // находим общих друзей
-        for (Long idOfFriend: friendsId1) {
-            if (friendsId2.contains(idOfFriend)) {
-                friends.add(getUserById(idOfFriend));
+        for (User friend : friends1) {
+            if (friends2.contains(friend)) {
+                friends.add(friend);
             }
         }
 

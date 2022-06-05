@@ -1,10 +1,11 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.MPA;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -69,21 +70,6 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.query(sqlQuery, this::FilmFromSQL);
     }
 
-    private Film FilmFromSQL(ResultSet rs, int rowNum) throws SQLException {
-        Integer id = rs.getInt("id");
-        String name = rs.getString("name");
-        String description = rs.getString("description");
-        LocalDate releaseDate = rs.getDate("release_date").toLocalDate();
-        Duration duration = Duration.ofSeconds(rs.getInt("duration"));
-
-        int mpaRatingId = rs.getInt("mpa_rating");
-
-        MPA mpaRating = getMPAFromSQL(mpaRatingId);
-        List<Genre> genre = getGenreFromSQL(id);
-        Set<Long> likes = getLikesFromSQL(id);
-
-        return new Film(id, name, description, releaseDate, duration, likes, genre, mpaRating);
-    }
 
     private MPA getMPAFromSQL(Integer ratingId) {
         String sqlQuery = "SELECT rating_value FROM mpa_rating WHERE mpa_rating_id = ? ";
@@ -108,7 +94,8 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Optional<Film> getFilmById(Long id) {
-        return Optional.empty();
+        String  sqlQuert = "SELECT * FROM Film WHERE id = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sqlQuert, this::FilmFromSQL, id));
     }
 
     private void updateLikes(Film film) {
@@ -142,5 +129,20 @@ public class FilmDbStorage implements FilmStorage {
 
         return jdbcTemplate.queryForObject(sqlQuery,
                 (rs, rowNum) -> rs.getInt("genre_id"), genre.toString());
+    }
+    private Film FilmFromSQL(ResultSet rs, int rowNum) throws SQLException {
+        Integer id = rs.getInt("id");
+        String name = rs.getString("name");
+        String description = rs.getString("description");
+        LocalDate releaseDate = rs.getDate("release_date").toLocalDate();
+        Duration duration = Duration.ofSeconds(rs.getInt("duration"));
+
+        int mpaRatingId = rs.getInt("mpa_rating");
+
+        MPA mpaRating = getMPAFromSQL(mpaRatingId);
+        List<Genre> genre = getGenreFromSQL(id);
+        Set<Long> likes = getLikesFromSQL(id);
+
+        return new Film(id, name, description, releaseDate, duration, likes, genre, mpaRating);
     }
 }

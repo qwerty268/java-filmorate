@@ -12,5 +12,5 @@ public interface UserStorage {
 
     List<User> getUsers();
 
-    Optional<User> getUserById(Long id);
+    Optional<User> getUserById(java.lang.Long id);
 }

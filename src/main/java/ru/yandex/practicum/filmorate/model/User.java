@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.Value;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -19,22 +18,16 @@ public class User {
     private String login;
     private String name;
     private LocalDate birthday;
-    private Set<Long> friends;
-    private Status status;
+    private Set<Friendship> friends;
 
     public void addFriend(User user) {
         if (friends == null) {
             friends = new HashSet<>();
         }
-        friends.add(user.getId());
+        friends.add(new Friendship(this.getId(), user.getId()));
     }
 
     public void deleteFriend(User user) {
-        friends.remove(user);
+        friends.remove(new Friendship(this.getId(), user.getId()));
     }
 }
-
-    enum Status {
-        CONFIRMED,
-        UNCONFIRMED
-    }

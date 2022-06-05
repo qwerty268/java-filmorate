@@ -14,7 +14,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     private final Map<Long, User> users = new HashMap<>();
 
-    private static Long userId = 1L;
+    private static java.lang.Long userId = 1L;
 
     @Override
     public void addUser(User user) {
@@ -42,7 +42,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Optional<User> getUserById(Long id) {
+    public Optional<User> getUserById(java.lang.Long id) {
         return Optional.ofNullable(users.get(id));
     }
 
