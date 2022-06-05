@@ -20,6 +20,15 @@ public class User {
     private LocalDate birthday;
     private Set<Friendship> friends;
 
+    public User(long id, String email, String login, String name, LocalDate birthday, Set<Friendship> friends) {
+        this.id = id;
+        this.email = email;
+        this.login = login;
+        this.name = name;
+        this.birthday = birthday;
+        this.friends = friends;
+    }
+
     public void addFriend(User user) {
         if (friends == null) {
             friends = new HashSet<>();

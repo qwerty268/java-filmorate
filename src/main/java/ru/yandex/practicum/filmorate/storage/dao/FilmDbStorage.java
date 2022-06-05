@@ -49,7 +49,8 @@ public class FilmDbStorage implements FilmStorage {
                 "description = ?," +
                 "release_date = ?," +
                 "duration = ?," +
-                "mpa_rating = ?";
+                "mpa_rating = ?" +
+                "WHERE id = ?";
 
         jdbcTemplate.update(sqlQuery,
                 film.getId(),
@@ -57,7 +58,8 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration().getSeconds(),
-                film.getMPARatingSQL());
+                film.getMPARatingSQL(),
+                film.getId());
 
         updateGenres(film);
         updateLikes(film);
@@ -94,8 +96,8 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Optional<Film> getFilmById(Long id) {
-        String  sqlQuert = "SELECT * FROM Film WHERE id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sqlQuert, this::FilmFromSQL, id));
+        String  sqlQuery = "SELECT * FROM Film WHERE id = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sqlQuery, this::FilmFromSQL, id));
     }
 
     private void updateLikes(Film film) {

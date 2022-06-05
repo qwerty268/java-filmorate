@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.UserDoesNotExistException;
 import ru.yandex.practicum.filmorate.model.Friendship;
@@ -18,7 +19,7 @@ public class UserService {
     private final UserStorage storage;
 
     @Autowired
-    public UserService(InMemoryUserStorage storage) {
+    public UserService(@Qualifier("UserDbStorage") UserStorage storage) {
         this.storage = storage;
     }
 
@@ -60,7 +61,11 @@ public class UserService {
 
         friendshipsOfUser.stream()
                 .forEach((friendship) -> {
-                    friends.add(getUserById(friendship.getUser2()));
+                    if (friendship.getUser1() != id) {
+                        friends.add(getUserById(friendship.getUser2()));
+                    } else {
+                        friends.add(getUserById(friendship.getUser2()));
+                    }
                 });
 
         return friends;

@@ -10,6 +10,17 @@ public class Friendship {
     private final Long user2;
     private Boolean status;
 
+    public Friendship(Long user1, Long user2, Boolean status) {
+        this.user1 = user1;
+        this.user2 = user2;
+        this.status = status;
+    }
+
+    public Friendship(Long user1, Long user2) {
+        this.user1 = user1;
+        this.user2 = user2;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
