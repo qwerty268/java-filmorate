@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Data
 public class Friendship {
-    private final Long user1;
+    private final Long user1; //user, предложивший дружить
     private final Long user2;
     private Boolean status;
 
@@ -26,8 +26,7 @@ public class Friendship {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Friendship that = (Friendship) o;
-        return Objects.equals(user1, that.user1) && Objects.equals(user2, that.user2) ||
-                Objects.equals(user1, that.user2) && Objects.equals(user2, that.user1);
+        return Objects.equals(user1, that.user1) && Objects.equals(user2, that.user2);
     }
 
     @Override

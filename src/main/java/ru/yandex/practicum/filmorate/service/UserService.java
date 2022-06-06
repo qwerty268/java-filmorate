@@ -6,13 +6,9 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.UserDoesNotExistException;
 import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -39,12 +35,27 @@ public class UserService {
         return storage.getUserById(id).orElseThrow(() -> new UserDoesNotExistException(id));
     }
 
+
+    //Добавление в друзья и принятие
     public void addFriend(Long id, Long friendId) {
         User user1 = getUserById(id);
         User user2 = getUserById(friendId);
 
-        user1.addFriend(user2);
-        user2.addFriend(user1);
+        user1.addFriend(user2);             //создается запрос на добавление в лрузья
+
+
+        Set<Friendship> friendships1 = user1.getFriends();
+        Set<Friendship> friendships2 = user2.getFriends();
+
+
+
+        if (friendships2.contains(new Friendship(user2.getId(), user1.getId()))) {      //если запрос на добавление в друзья был отправлен от user 2 тоже, то пользователи запрос будет принят
+            friendships2.add(new Friendship(user2.getId(), user1.getId(), true));
+            friendships1.add(new Friendship(user1.getId(), user2.getId(), true));
+        }
+
+        updateUser(user1);
+        updateUser(user2);
     }
 
     public void deleteFriend(Long id, Long friendId) {
@@ -59,9 +70,9 @@ public class UserService {
         Set<Friendship> friendshipsOfUser = getUserById(id).getFriends();
         List<User> friends = new ArrayList<>();
 
-        friendshipsOfUser.stream()
+        friendshipsOfUser
                 .forEach((friendship) -> {
-                    if (friendship.getUser1() != id) {
+                    if (!Objects.equals(friendship.getUser1(), id)) {
                         friends.add(getUserById(friendship.getUser2()));
                     } else {
                         friends.add(getUserById(friendship.getUser2()));

@@ -29,6 +29,7 @@ public class UserDbStorage implements UserStorage {
 
         jdbcTemplate.update(sqlQuery,
                 user.getId(),
+                user.getEmail(),
                 user.getLogin(),
                 user.getName(),
                 user.getBirthday());
@@ -38,7 +39,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void updateUser(User user) {
-        String sqlQuery = "UPDATE User SET " +
+        String sqlQuery = "UPDATE USER SET " +
                 "id = ?," +
                 "email = ?," +
                 "login = ?," +
@@ -67,20 +68,22 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public Optional<User> getUserById(Long id) {
-        String sqlQuery = "SELECT * FROM User WHERE id = ?";
+        String sqlQuery = "SELECT * FROM USER WHERE id = ?";
 
         return Optional.ofNullable(jdbcTemplate.queryForObject(sqlQuery, this::userFromSQL, id));
     }
 
     private void updateFriendships(User user) {
-        String sqlQuery = "DELETE FROM Friend WHERE  first_user_id = ? OR second_user_id = ?";
+        String sqlQuery = "DELETE FROM Friend WHERE  first_user_id = ? OR (second_user_id = ? AND status = TRUE)";
 
         jdbcTemplate.update(sqlQuery, user.getId(), user.getId());
 
         sqlQuery = "INSERT INTO Friend VALUES (?, ?, ?)";
 
-        for (Friendship friendship : user.getFriends()) {
-            jdbcTemplate.update(sqlQuery, friendship.getUser1(), friendship.getUser2(), friendship.getStatus());
+        if (user.getFriends() != null) {
+            for (Friendship friendship : user.getFriends()) {
+                jdbcTemplate.update(sqlQuery, friendship.getUser1(), friendship.getUser2(), friendship.getStatus());
+            }
         }
     }
 

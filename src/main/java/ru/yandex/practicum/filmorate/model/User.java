@@ -36,6 +36,13 @@ public class User {
         friends.add(new Friendship(this.getId(), user.getId()));
     }
 
+    public void addFriendRequest(User user) {
+        if (friends == null) {
+            friends = new HashSet<>();
+        }
+        friends.add(new Friendship(user.getId(), this.getId()));
+    }
+
     public void deleteFriend(User user) {
         friends.remove(new Friendship(this.getId(), user.getId()));
     }
