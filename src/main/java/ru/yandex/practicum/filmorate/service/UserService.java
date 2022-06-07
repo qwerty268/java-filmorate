@@ -31,15 +31,15 @@ public class UserService {
         return storage.getUsers();
     }
 
-    public User getUserById(Long id) {
-        return storage.getUserById(id).orElseThrow(() -> new UserDoesNotExistException(id));
+    public Optional<User> getUserById(Long id) {
+        return storage.getUserById(id);
     }
 
 
     //Добавление в друзья и принятие
     public void addFriend(Long id, Long friendId) {
-        User user1 = getUserById(id);
-        User user2 = getUserById(friendId);
+        User user1 = getUserById(id).orElseThrow(() -> new UserDoesNotExistException(id));
+        User user2 = getUserById(friendId).orElseThrow(() -> new UserDoesNotExistException(id));
 
         user1.addFriend(user2);             //создается запрос на добавление в лрузья
 
@@ -48,9 +48,11 @@ public class UserService {
         Set<Friendship> friendships2 = user2.getFriends();
 
 
-
         if (friendships2.contains(new Friendship(user2.getId(), user1.getId()))) {      //если запрос на добавление в друзья был отправлен от user 2 тоже, то пользователи запрос будет принят
+            friendships2.remove(new Friendship(user2.getId(), user1.getId()));
             friendships2.add(new Friendship(user2.getId(), user1.getId(), true));
+
+            friendships1.remove(new Friendship(user1.getId(), user2.getId()));
             friendships1.add(new Friendship(user1.getId(), user2.getId(), true));
         }
 
@@ -59,23 +61,29 @@ public class UserService {
     }
 
     public void deleteFriend(Long id, Long friendId) {
-        User user1 = getUserById(id);
-        User user2 = getUserById(friendId);
+        User user1 = getUserById(id).orElseThrow(() -> new UserDoesNotExistException(id));
+        User user2 = getUserById(friendId).orElseThrow(() -> new UserDoesNotExistException(id));
 
         user1.deleteFriend(user2);
         user2.deleteFriend(user1);
+
+        updateUser(user1);
+        updateUser(user2);
     }
 
     public List<User> getFriends(Long id) {
-        Set<Friendship> friendshipsOfUser = getUserById(id).getFriends();
+        Set<Friendship> friendshipsOfUser = getUserById(id)
+                .orElseThrow(() -> new UserDoesNotExistException(id))
+                .getFriends();
+
         List<User> friends = new ArrayList<>();
 
         friendshipsOfUser
                 .forEach((friendship) -> {
-                    if (!Objects.equals(friendship.getUser1(), id)) {
-                        friends.add(getUserById(friendship.getUser2()));
-                    } else {
-                        friends.add(getUserById(friendship.getUser2()));
+                    if (friendship.getStatus() == true) {
+                        friends
+                                .add(getUserById(friendship.getUser2())
+                                        .orElseThrow(() -> new UserDoesNotExistException(id)));
                     }
                 });
 

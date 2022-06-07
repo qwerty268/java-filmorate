@@ -6,11 +6,14 @@ import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Component("UserDbStorage")
 public class UserDbStorage implements UserStorage {
@@ -74,9 +77,9 @@ public class UserDbStorage implements UserStorage {
     }
 
     private void updateFriendships(User user) {
-        String sqlQuery = "DELETE FROM Friend WHERE  first_user_id = ? OR (second_user_id = ? AND status = TRUE)";
+        String sqlQuery = "DELETE FROM Friend WHERE  first_user_id = ? ";
 
-        jdbcTemplate.update(sqlQuery, user.getId(), user.getId());
+        jdbcTemplate.update(sqlQuery, user.getId());
 
         sqlQuery = "INSERT INTO Friend VALUES (?, ?, ?)";
 
@@ -92,11 +95,14 @@ public class UserDbStorage implements UserStorage {
         String email = rs.getString("email");
         String login = rs.getString("login");
         String name = rs.getString("name");
-        LocalDate birthday = LocalDate.ofInstant(rs.getDate("date").toInstant(), ZoneId.systemDefault());
 
-        String sqlQuery = "SELECT * FROM Friend WHERE first_user_id = ? OR second_user_id = ?";
+        Date birthDaySQL = rs.getDate("birthday");
 
-        Set<Friendship> friendshipSet = new HashSet<>(jdbcTemplate.query(sqlQuery, this::friendshipFromSQL, id, id));
+        LocalDate birthday = birthDaySQL.toLocalDate();
+
+        String sqlQuery = "SELECT * FROM Friend WHERE first_user_id = ?";
+
+        Set<Friendship> friendshipSet = new HashSet<>(jdbcTemplate.query(sqlQuery, this::friendshipFromSQL, id));
 
         return new User(id, email, login, name, birthday, friendshipSet);
     }

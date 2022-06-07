@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Friendship {
     private final Long user1; //user, предложивший дружить
     private final Long user2;
-    private Boolean status;
+    private Boolean status = false;
 
     public Friendship(Long user1, Long user2, Boolean status) {
         this.user1 = user1;

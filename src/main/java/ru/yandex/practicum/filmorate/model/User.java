@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /* анотация @Value делает все поля приватными и финальными, а также добавляет геттеры.
@@ -45,5 +46,32 @@ public class User {
 
     public void deleteFriend(User user) {
         friends.remove(new Friendship(this.getId(), user.getId()));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    //для тестов
+    public boolean everyFieldEquals(User user) {
+        if (this.id == user.getId()
+                && this.email.equals(user.getEmail())
+                && this.getLogin().equals(user.getLogin())
+                && this.name.equals(user.getName())
+                && this.birthday.equals(user.getBirthday())
+                && this.friends.equals(user.getFriends())) {
+            return true;
+        }
+
+        return false;
     }
 }
