@@ -40,6 +40,7 @@ public class FilmService {
 
     public void updateFilm(Film film) {
         filter(film);
+        getFilmById(film.getId());
         filmStorage.updateFilm(film);
     }
 
@@ -103,6 +104,10 @@ public class FilmService {
 
         if (film.getDuration().isNegative()) {
             builder.append(" Введена отрицательная продолжительность фильма.");
+        }
+
+        if (film.getMpa() == null) {
+            builder.append(" MPA не указан.");
         }
 
 
