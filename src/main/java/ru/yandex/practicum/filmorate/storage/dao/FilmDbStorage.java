@@ -30,16 +30,24 @@ public class FilmDbStorage implements FilmStorage {
                 " VALUES (?, ?, ?, ?, ?, ?)";
 
 
-        jdbcTemplate.update(sqlQuery,
-                film.getId(),
-                film.getName(),
-                film.getDescription(),
-                film.getReleaseDate(),
-                film.getDuration().getSeconds(),
-                MpaRatingToSQL(film));
+    jdbcTemplate.update(sqlQuery,
+            film.getId(),
+            film.getName(),
+            film.getDescription(),
+            film.getReleaseDate(),
+            durationToSQL(film.getDuration()),
+            MpaRatingToSQL(film));
+
 
         updateGenres(film);
         updateLikes(film);
+    }
+
+    private Long durationToSQL(Duration duration) {
+        if (duration != null) {
+            return duration.getSeconds();
+        }
+        return null;
     }
 
     @Override
@@ -75,10 +83,13 @@ public class FilmDbStorage implements FilmStorage {
 
 
     private MPA getMPAFromSQL(Integer ratingId) {
-        String sqlQuery = "SELECT rating_value FROM mpa_rating WHERE mpa_rating_id = ? ";
+        if (ratingId != 0) {
+            String sqlQuery = "SELECT rating_value FROM mpa_rating WHERE mpa_rating_id = ? ";
 
-        return jdbcTemplate.queryForObject(sqlQuery,
-                (rs, rowNum) -> MPA.valueOf(rs.getString("rating_value")), ratingId);
+            return jdbcTemplate.queryForObject(sqlQuery,
+                    (rs, rowNum) -> MPA.valueOf(rs.getString("rating_value")), ratingId);
+        }
+        return MPA.G;
     }
 
     private List<Genre> getGenreFromSQL(Integer filmId) {
@@ -151,9 +162,12 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private Integer MpaRatingToSQL(Film film) {
-        String sqlQuery = "SELECT * FROM MPA_RATING WHERE rating_value = ?";
+        if (film.getRating() != null) {
+            String sqlQuery = "SELECT * FROM MPA_RATING WHERE rating_value = ?";
+            return jdbcTemplate.queryForObject(sqlQuery, this::getIdOfMpaRating, film.getRating().toString());
+        }
 
-        return jdbcTemplate.queryForObject(sqlQuery, this::getIdOfMpaRating, film.getRating().toString());
+        return null;
     }
 
     private Integer getIdOfMpaRating(ResultSet rs, int rowNum) throws SQLException {

@@ -1,22 +1,28 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.FilmDoesNotExistException;
 import ru.yandex.practicum.filmorate.exceptions.UserDoesNotExistException;
+import ru.yandex.practicum.filmorate.exceptions.ValidationErrorException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
+@Slf4j
 @Service
 public class FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
 
+    private static Long filmId = 1L;
     @Autowired
     public FilmService(@Qualifier("FilmDbStorage") FilmStorage filmStorage,
                        @Qualifier("UserDbStorage") UserStorage userStorage) {
@@ -25,10 +31,13 @@ public class FilmService {
     }
 
     public void addFilm(Film film) {
+        createId(film);
+        filter(film);
         filmStorage.addFilm(film);
     }
 
     public void updateFilm(Film film) {
+        filter(film);
         filmStorage.updateFilm(film);
     }
 
@@ -67,4 +76,42 @@ public class FilmService {
         return films;
     }
 
+    private boolean filter(Film film) {
+        StringBuilder builder = new StringBuilder();
+        if (film.getName().isBlank()) {
+            builder.append(" Передано пустое имя;");
+        }
+
+        if (film.getDescription().length() > 200) {
+            builder.append(" Описание содержит больше, чем 200 символов;");
+        }
+
+        if (Objects.equals(film.getDescription(), "")) {
+            builder.append(" Описание отсутствует;");
+        }
+
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 1, 28))) {
+            builder.append(" Дата релиза введена некорректно;");
+        }
+
+        if (film.getDuration().isNegative()) {
+            builder.append(" Введена отрицательная продолжительность фильма.");
+        }
+
+
+        String cause = builder.toString();
+        if (!cause.isBlank()) {
+            cause = builder.replace(builder.length() - 1, builder.length(), ".").toString();
+            log.error("Валидация не пройдена (Film):" + cause);
+            throw new ValidationErrorException("Переданы ошибочные данные для Film:" + cause);
+        }
+        return true;
+    }
+
+    private void createId(Film film) {
+        if (film.getId() == 0) {
+            film.setId(filmId);
+            filmId++;
+        }
+    }
 }

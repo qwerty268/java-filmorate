@@ -1,7 +1,10 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.ValidationErrorException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -15,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+@Slf4j
 @Component("UserDbStorage")
 public class UserDbStorage implements UserStorage {
 
@@ -114,4 +118,5 @@ public class UserDbStorage implements UserStorage {
 
         return new Friendship(user1_id, user2_id, status);
     }
+
 }

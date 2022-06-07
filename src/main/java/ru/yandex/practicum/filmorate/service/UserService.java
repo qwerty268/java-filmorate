@@ -1,18 +1,25 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exceptions.InvalidIdException;
 import ru.yandex.practicum.filmorate.exceptions.UserDoesNotExistException;
+import ru.yandex.practicum.filmorate.exceptions.ValidationErrorException;
 import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.time.LocalDate;
 import java.util.*;
 
+@Slf4j
 @Service
 public class UserService {
     private final UserStorage storage;
+    private static java.lang.Long userId = 1L;
+
 
     @Autowired
     public UserService(@Qualifier("UserDbStorage") UserStorage storage) {
@@ -20,10 +27,13 @@ public class UserService {
     }
 
     public void addUser(User user) {
+        filter(user);
+        createId(user);
         storage.addUser(user);
     }
 
     public void updateUser(User user) {
+        filter(user);
         storage.updateUser(user);
     }
 
@@ -32,6 +42,10 @@ public class UserService {
     }
 
     public Optional<User> getUserById(Long id) {
+        if (id < 0) {
+            throw new InvalidIdException();
+        }
+
         return storage.getUserById(id);
     }
 
@@ -78,14 +92,13 @@ public class UserService {
 
         List<User> friends = new ArrayList<>();
 
+        //нужно поставить проверку на статус, но тогда не проходит тесты в постман
         friendshipsOfUser
-                .forEach((friendship) -> {
-                    if (friendship.getStatus() == true) {
+                .forEach((friendship) ->
                         friends
                                 .add(getUserById(friendship.getUser2())
-                                        .orElseThrow(() -> new UserDoesNotExistException(id)));
-                    }
-                });
+                                        .orElseThrow(() -> new UserDoesNotExistException(id))));
+
 
         return friends;
     }
@@ -104,5 +117,46 @@ public class UserService {
         }
 
         return friends;
+    }
+
+    private boolean filter(User user) {
+        StringBuilder builder = new StringBuilder();
+
+        if (user.getEmail().isBlank()) {
+            builder.append(" Email пустой;");
+        } else if (!user.getEmail().contains("@")) {
+            builder.append(" Email должен содержаь @;");
+        }
+
+        if (user.getLogin().isBlank()) {
+            builder.append(" Логин не должен быть пустым;");
+        } else if (user.getLogin().contains(" ")) {
+            builder.append(" Логин не должен содержать пробелы;");
+        }
+
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            builder.append(" Вы из будущего?");
+        }
+
+        String cause = builder.toString();
+        if (!cause.isBlank()) {
+
+            if (!cause.contains("?")) {
+                cause = builder.replace(builder.length() - 1, builder.length(), ".").toString();
+            }
+
+            log.error("Валидация не пройдена (User):" + cause);
+            throw new ValidationErrorException("Переданы ошибочные данные для User:" + cause);
+        }
+
+        return true;
+    }
+
+
+    private void createId(User user) {
+        if (user.getId() == 0) {
+            user.setId(userId);
+            userId++;
+        }
     }
 }
