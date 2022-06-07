@@ -63,15 +63,11 @@ public class User {
 
     //для тестов
     public boolean everyFieldEquals(User user) {
-        if (this.id == user.getId()
+        return this.id == user.getId()
                 && this.email.equals(user.getEmail())
                 && this.getLogin().equals(user.getLogin())
                 && this.name.equals(user.getName())
                 && this.birthday.equals(user.getBirthday())
-                && this.friends.equals(user.getFriends())) {
-            return true;
-        }
-
-        return false;
+                && this.friends.equals(user.getFriends());
     }
 }

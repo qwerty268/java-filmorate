@@ -44,13 +44,17 @@ public class FilmService {
     public void putLike(Long filmId, Long userId) {
         userStorage.getUserById(userId).orElseThrow(() -> new UserDoesNotExistException(userId));
 
-        filmStorage.getFilmById(filmId).orElseThrow(() -> new FilmDoesNotExistException(filmId)).putLike(userId);
+       Film film = filmStorage.getFilmById(filmId).orElseThrow(() -> new FilmDoesNotExistException(filmId));
+       film.putLike(userId);
+       updateFilm(film);
     }
 
     public void removeLike(Long filmId, Long userId) {
         userStorage.getUserById(userId).orElseThrow(() -> new UserDoesNotExistException(userId));
 
-        filmStorage.getFilmById(filmId).orElseThrow(() -> new FilmDoesNotExistException(filmId)).removeLike(userId);
+       Film film = filmStorage.getFilmById(filmId).orElseThrow(() -> new FilmDoesNotExistException(filmId));
+       film.removeLike(userId);
+       updateFilm(film);
     }
 
     public List<Film> getMostLikedFilms(Integer count) {

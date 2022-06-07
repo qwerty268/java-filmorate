@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /* анотация @Value делает все поля приватными и финальными, а также добавляет геттеры.
@@ -51,21 +52,29 @@ public class Film {
         likes.remove(userId);
     }
 
-    public Integer getMPARatingSQL() {
-        switch (rating) {
-            case G:
-                return 1;
-            case PG:
-                return 2;
-            case PG13:
-                return 3;
-            case R:
-                return 4;
-            case NC17:
-                return 5;
-        }
-        return null;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Film film = (Film) o;
+        return id == film.id;
     }
 
+    public boolean everyFieldEquals(Film film) {
+        return this.id == film.getId()
+                && Objects.equals(this.name, film.getName())
+                && Objects.equals(this.description, film.getDescription())
+                && this.releaseDate.equals(film.getReleaseDate())
+                && this.duration.equals(film.getDuration())
+                && this.likes.equals(film.getLikes())
+                && this.rating.equals(film.getRating())
+                && this.rating.equals(film.rating);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
 

@@ -29,13 +29,14 @@ public class FilmDbStorage implements FilmStorage {
         String sqlQuery = "INSERT INTO Film" +
                 " VALUES (?, ?, ?, ?, ?, ?)";
 
+
         jdbcTemplate.update(sqlQuery,
                 film.getId(),
                 film.getName(),
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration().getSeconds(),
-                film.getMPARatingSQL());
+                MpaRatingToSQL(film));
 
         updateGenres(film);
         updateLikes(film);
@@ -58,7 +59,7 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration().getSeconds(),
-                film.getMPARatingSQL(),
+                MpaRatingToSQL(film),
                 film.getId());
 
         updateGenres(film);
@@ -96,7 +97,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Optional<Film> getFilmById(Long id) {
-        String  sqlQuery = "SELECT * FROM Film WHERE id = ?";
+        String sqlQuery = "SELECT * FROM Film WHERE id = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sqlQuery, this::FilmFromSQL, id));
     }
 
@@ -132,6 +133,7 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.queryForObject(sqlQuery,
                 (rs, rowNum) -> rs.getInt("genre_id"), genre.toString());
     }
+
     private Film FilmFromSQL(ResultSet rs, int rowNum) throws SQLException {
         Integer id = rs.getInt("id");
         String name = rs.getString("name");
@@ -146,5 +148,15 @@ public class FilmDbStorage implements FilmStorage {
         Set<Long> likes = getLikesFromSQL(id);
 
         return new Film(id, name, description, releaseDate, duration, likes, genre, mpaRating);
+    }
+
+    private Integer MpaRatingToSQL(Film film) {
+        String sqlQuery = "SELECT * FROM MPA_RATING WHERE rating_value = ?";
+
+        return jdbcTemplate.queryForObject(sqlQuery, this::getIdOfMpaRating, film.getRating().toString());
+    }
+
+    private Integer getIdOfMpaRating(ResultSet rs, int rowNum) throws SQLException {
+        return rs.getInt("mpa_rating_id");
     }
 }

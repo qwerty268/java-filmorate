@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS Film
 
 CREATE TABLE IF NOT EXISTS Film_genre
 (
-    film_id  INTEGER PRIMARY KEY REFERENCES Film (id),
+    film_id  INTEGER REFERENCES Film (id),
     genre_id INTEGER REFERENCES Genre (genre_id)
 );
 
@@ -37,13 +37,28 @@ CREATE TABLE IF NOT EXISTS User
 
 CREATE TABLE IF NOT EXISTS Friend
 (
-    first_user_id  INTEGER PRIMARY KEY REFERENCES User (id),
+    first_user_id  INTEGER REFERENCES User (id),
     second_user_id INTEGER REFERENCES User (id),
     status         BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS Likes
 (
-    film_id INTEGER PRIMARY KEY REFERENCES Film (id),
+    film_id INTEGER REFERENCES Film (id),
     user_id INTEGER REFERENCES User (id)
 );
+
+/*Жанры*/
+INSERT INTO Genre VALUES (1, 'COMEDY');
+INSERT INTO Genre VALUES (2, 'DRAMA');
+INSERT INTO Genre VALUES (3, 'CARTOON');
+INSERT INTO Genre VALUES (4, 'THRILLER');
+INSERT INTO Genre VALUES (5, 'DOCUMENTARY');
+INSERT INTO Genre VALUES (6, 'ACTION');
+
+/*MPA*/
+INSERT INTO mpa_rating VALUES (1, 'G');
+INSERT INTO mpa_rating VALUES (2, 'PG');
+INSERT INTO mpa_rating VALUES (3, 'PG13');
+INSERT INTO mpa_rating VALUES (4, 'R');
+INSERT INTO mpa_rating VALUES (5, 'NC17');
