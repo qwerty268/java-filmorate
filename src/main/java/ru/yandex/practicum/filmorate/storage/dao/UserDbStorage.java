@@ -91,12 +91,17 @@ public class UserDbStorage implements UserStorage {
         jdbcTemplate.update(sqlQuery, user.getId());
 
         sqlQuery = "INSERT INTO Friend VALUES (?, ?, ?)";
+try {
 
-        if (user.getFriends() != null) {
-            for (Friendship friendship : user.getFriends()) {
-                jdbcTemplate.update(sqlQuery, friendship.getUser1(), friendship.getUser2(), friendship.getStatus());
-            }
+
+    if (user.getFriends() != null) {
+        for (Friendship friendship : user.getFriends()) {
+            jdbcTemplate.update(sqlQuery, friendship.getUser1(), friendship.getUser2(), friendship.getStatus());
         }
+    }
+} catch (Throwable throwable) {
+    throwable.getMessage();
+}
     }
 
     private User userFromSQL(ResultSet rs, int rowNum) throws SQLException {

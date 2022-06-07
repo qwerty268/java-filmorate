@@ -34,6 +34,7 @@ public class UserService {
 
     public void updateUser(User user) {
         filter(user);
+        storage.getUserById(user.getId()).orElseThrow(() -> new UserDoesNotExistException(user.getId()));
         storage.updateUser(user);
     }
 
@@ -149,6 +150,10 @@ public class UserService {
 
             log.error("Валидация не пройдена (User):" + cause);
             throw new ValidationErrorException("Переданы ошибочные данные для User:" + cause);
+        }
+
+        if (user.getName().isBlank()) {
+            user.setName(user.getLogin());
         }
 
         return true;
