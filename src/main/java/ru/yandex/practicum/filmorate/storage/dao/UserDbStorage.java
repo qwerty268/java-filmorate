@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.storage.dao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.InvalidIdException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationErrorException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Friendship;
@@ -75,6 +76,10 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public Optional<User> getUserById(Long id) {
+        if (id < 0) {
+            throw new InvalidIdException();
+        }
+
         String sqlQuery = "SELECT * FROM USER WHERE id = ?";
 
         return Optional.ofNullable(jdbcTemplate.queryForObject(sqlQuery, this::userFromSQL, id));

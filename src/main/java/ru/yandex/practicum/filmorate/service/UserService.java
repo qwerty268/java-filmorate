@@ -52,7 +52,9 @@ public class UserService {
 
     //Добавление в друзья и принятие
     public void addFriend(Long id, Long friendId) {
-        User user1 = getUserById(id).orElseThrow(() -> new UserDoesNotExistException(id));
+        User user1 = getUserById(id).orElseThrow(() ->
+                new UserDoesNotExistException(id)
+        );
         User user2 = getUserById(friendId).orElseThrow(() -> new UserDoesNotExistException(id));
 
         user1.addFriend(user2);             //создается запрос на добавление в лрузья

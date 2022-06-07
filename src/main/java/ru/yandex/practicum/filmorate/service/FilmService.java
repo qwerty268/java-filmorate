@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.FilmDoesNotExistException;
+import ru.yandex.practicum.filmorate.exceptions.InvalidIdException;
 import ru.yandex.practicum.filmorate.exceptions.UserDoesNotExistException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationErrorException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -23,6 +24,7 @@ public class FilmService {
     private final UserStorage userStorage;
 
     private static Long filmId = 1L;
+
     @Autowired
     public FilmService(@Qualifier("FilmDbStorage") FilmStorage filmStorage,
                        @Qualifier("UserDbStorage") UserStorage userStorage) {
@@ -31,8 +33,8 @@ public class FilmService {
     }
 
     public void addFilm(Film film) {
-        createId(film);
         filter(film);
+        createId(film);
         filmStorage.addFilm(film);
     }
 
@@ -46,6 +48,9 @@ public class FilmService {
     }
 
     public Film getFilmById(Long id) {
+        if (id < 0) {
+            throw new InvalidIdException();
+        }
         return filmStorage.getFilmById(id).orElseThrow(() -> new FilmDoesNotExistException(id));
     }
 
@@ -53,17 +58,19 @@ public class FilmService {
     public void putLike(Long filmId, Long userId) {
         userStorage.getUserById(userId).orElseThrow(() -> new UserDoesNotExistException(userId));
 
-       Film film = filmStorage.getFilmById(filmId).orElseThrow(() -> new FilmDoesNotExistException(filmId));
-       film.putLike(userId);
-       updateFilm(film);
+        Film film = filmStorage.getFilmById(filmId).orElseThrow(() -> new FilmDoesNotExistException(filmId));
+        film.putLike(userId);
+        updateFilm(film);
     }
 
     public void removeLike(Long filmId, Long userId) {
-        userStorage.getUserById(userId).orElseThrow(() -> new UserDoesNotExistException(userId));
+        userStorage.getUserById(userId).orElseThrow(() ->
+                    new UserDoesNotExistException(userId)
+        );
 
-       Film film = filmStorage.getFilmById(filmId).orElseThrow(() -> new FilmDoesNotExistException(filmId));
-       film.removeLike(userId);
-       updateFilm(film);
+        Film film = filmStorage.getFilmById(filmId).orElseThrow(() -> new FilmDoesNotExistException(filmId));
+        film.removeLike(userId);
+        updateFilm(film);
     }
 
     public List<Film> getMostLikedFilms(Integer count) {
