@@ -89,7 +89,7 @@ public class FilmDbStorage implements FilmStorage {
             return jdbcTemplate.queryForObject(sqlQuery,
                     (rs, rowNum) -> MPA.valueOf(rs.getString("rating_value")), ratingId);
         }
-        return MPA.G;
+        return null;
     }
 
     private List<Genre> getGenreFromSQL(Integer filmId) {
@@ -152,9 +152,8 @@ public class FilmDbStorage implements FilmStorage {
         LocalDate releaseDate = rs.getDate("release_date").toLocalDate();
         Duration duration = Duration.ofSeconds(rs.getInt("duration"));
 
-        int mpaRatingId = rs.getInt("mpa_rating");
+        MPA mpaRating = new MPA(rs.getInt("mpa_rating"));
 
-        MPA mpaRating = getMPAFromSQL(mpaRatingId);
         List<Genre> genre = getGenreFromSQL(id);
         Set<Long> likes = getLikesFromSQL(id);
 
@@ -162,9 +161,9 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private Integer MpaRatingToSQL(Film film) {
-        if (film.getRating() != null) {
+        if (film.getMpa() != null) {
             String sqlQuery = "SELECT * FROM MPA_RATING WHERE rating_value = ?";
-            return jdbcTemplate.queryForObject(sqlQuery, this::getIdOfMpaRating, film.getRating().toString());
+            return jdbcTemplate.queryForObject(sqlQuery, this::getIdOfMpaRating, film.getMpa().toString());
         }
 
         return null;

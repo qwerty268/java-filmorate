@@ -22,10 +22,10 @@ public class Film {
     private Duration duration;
     private Set<Long> likes;
     private List<Genre> genre;
-    private MPA rating;
+    private MPA mpa;
 
 
-    public Film(long id, String name, String description, LocalDate releaseDate, Duration duration, Set<Long> likes, List<Genre> genre, MPA rating) {
+    public Film(long id, String name, String description, LocalDate releaseDate, Duration duration, Set<Long> likes, List<Genre> genre, MPA mpa) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -35,7 +35,7 @@ public class Film {
 
         this.genre = genre;
 
-        this.rating = rating;
+        this.mpa = mpa;
     }
 
     public void putLike(Long userId) {
@@ -66,8 +66,8 @@ public class Film {
                 && this.releaseDate.equals(film.getReleaseDate())
                 && this.duration.equals(film.getDuration())
                 && this.likes.equals(film.getLikes())
-                && this.rating.equals(film.getRating())
-                && this.rating.equals(film.rating);
+                && this.mpa.equals(film.getMpa())
+                && this.mpa.equals(film.mpa);
     }
 
     @Override

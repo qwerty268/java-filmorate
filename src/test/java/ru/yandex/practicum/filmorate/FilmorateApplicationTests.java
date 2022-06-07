@@ -72,7 +72,7 @@ class FilmorateApplicationTests {
                 Duration.ZERO,
                 new HashSet<>(),
                 List.of(Genre.CARTOON, Genre.ACTION),
-                MPA.G);
+                new MPA(1));
         filmService.addFilm(film1);
 
         film2 = new Film(2,
@@ -82,7 +82,7 @@ class FilmorateApplicationTests {
                 Duration.ofHours(1),
                 new HashSet<>(),
                 List.of(Genre.DOCUMENTARY, Genre.ACTION),
-                MPA.PG);
+                new MPA(1));
         filmService.addFilm(film2);
     }
 
@@ -148,7 +148,7 @@ class FilmorateApplicationTests {
                 Duration.ZERO,
                 new HashSet<>(),
                 List.of(Genre.CARTOON, Genre.ACTION),
-                MPA.G);
+                new MPA(1));
 
         filmService.updateFilm(film1);
 
