@@ -3,8 +3,6 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -13,8 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-/* анотация @Value делает все поля приватными и финальными, а также добавляет геттеры.
- Изменение полей идет через копирование объекта*/
+
 @Data
 @Builder(toBuilder = true)
 public class Film {
@@ -61,6 +58,7 @@ public class Film {
         return id == film.id;
     }
 
+    //для тестов
     public boolean everyFieldEquals(Film film) {
         return this.id == film.getId()
                 && Objects.equals(this.name, film.getName())

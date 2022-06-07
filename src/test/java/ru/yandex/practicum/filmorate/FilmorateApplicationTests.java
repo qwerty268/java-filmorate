@@ -135,7 +135,8 @@ class FilmorateApplicationTests {
 
     @Test
     public void testGetFilms() {
-        assertTrue(filmService.getFilms().equals(List.of(film1, film2)));
+
+        assertEquals(filmService.getFilms(), List.of(film1, film2));
     }
 
     @Test
@@ -151,7 +152,7 @@ class FilmorateApplicationTests {
 
         filmService.updateFilm(film1);
 
-        assertEquals(film1, filmService.getFilmById(1L));
+        assertTrue(film1.everyFieldEquals(filmService.getFilmById(1L)));
     }
 
     @Test
