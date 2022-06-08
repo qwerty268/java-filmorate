@@ -21,11 +21,11 @@ public class Film {
     private LocalDate releaseDate;
     private Duration duration;
     private Set<Long> likes;
-    private List<Genre> genre;
+    private List<String> genre;
     private MPA mpa;
 
 
-    public Film(long id, String name, String description, LocalDate releaseDate, Duration duration, Set<Long> likes, List<Genre> genre, MPA mpa) {
+    public Film(long id, String name, String description, LocalDate releaseDate, Duration duration, Set<Long> likes, List<String> genre, MPA mpa) {
         this.id = id;
         this.name = name;
         this.description = description;

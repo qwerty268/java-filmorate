@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.storage.dao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.MPA;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
@@ -84,12 +83,12 @@ public class FilmDbStorage implements FilmStorage {
 
 
 
-    private List<Genre> getGenreFromSQL(Integer filmId) {
+    private List<String> getGenreFromSQL(Integer filmId) {
         String sqlQuery = "SELECT g.genre FROM Film_genre AS fg " +
                 " LEFT JOIN Genre AS g ON g.genre_id = fg.genre_id " +
                 "WHERE fg.film_id = ?";
 
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> Genre.valueOf(rs.getString("genre")), filmId);
+        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> rs.getString("genre"), filmId);
     }
 
     private Set<Long> getLikesFromSQL(Integer filmId) {
@@ -130,11 +129,11 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
-    private Integer GenreToSQL(Genre genre) {
+    private Integer GenreToSQL(String genre) {
         String sqlQuery = "SELECT genre_id FROM Genre WHERE genre = ?";
 
         return jdbcTemplate.queryForObject(sqlQuery,
-                (rs, rowNum) -> rs.getInt("genre_id"), genre.toString());
+                (rs, rowNum) -> rs.getInt("genre_id"), genre);
     }
 
     private Film FilmFromSQL(ResultSet rs, int rowNum) throws SQLException {
@@ -146,22 +145,9 @@ public class FilmDbStorage implements FilmStorage {
 
         MPA mpaRating = new MPA(rs.getInt("mpa_rating"));
 
-        List<Genre> genre = getGenreFromSQL(id);
+        List<String> genre = getGenreFromSQL(id);
         Set<Long> likes = getLikesFromSQL(id);
 
         return new Film(id, name, description, releaseDate, duration, likes, genre, mpaRating);
-    }
-
-    private Integer MpaRatingToSQL(Film film) {
-        if (film.getMpa() != null) {
-            String sqlQuery = "SELECT * FROM MPA_RATING WHERE rating_value = ?";
-            return jdbcTemplate.queryForObject(sqlQuery, this::getIdOfMpaRating, film.getMpa().toString());
-        }
-
-        return null;
-    }
-
-    private Integer getIdOfMpaRating(ResultSet rs, int rowNum) throws SQLException {
-        return rs.getInt("mpa_rating_id");
     }
 }
