@@ -36,7 +36,7 @@ public class FilmDbStorage implements FilmStorage {
             film.getDescription(),
             film.getReleaseDate(),
             durationToSQL(film.getDuration()),
-            MpaRatingToSQL(film));
+            film.getMpa().getId());
 
 
         updateGenres(film);
@@ -67,7 +67,7 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration().getSeconds(),
-                MpaRatingToSQL(film),
+                film.getMpa().getId(),
                 film.getId());
 
         updateGenres(film);
@@ -82,15 +82,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
 
-    private MPA getMPAFromSQL(Integer ratingId) {
-        if (ratingId != 0) {
-            String sqlQuery = "SELECT rating_value FROM mpa_rating WHERE mpa_rating_id = ? ";
 
-            return jdbcTemplate.queryForObject(sqlQuery,
-                    (rs, rowNum) -> MPA.valueOf(rs.getString("rating_value")), ratingId);
-        }
-        return null;
-    }
 
     private List<Genre> getGenreFromSQL(Integer filmId) {
         String sqlQuery = "SELECT g.genre FROM Film_genre AS fg " +
