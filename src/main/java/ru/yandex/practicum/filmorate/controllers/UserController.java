@@ -3,9 +3,9 @@ package ru.yandex.practicum.filmorate.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exceptions.UserDoesNotExistException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
 
@@ -39,7 +39,8 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public User getUser(@PathVariable Long id) {
-        return service.getUserById(id);
+        return service.getUserById(id)
+                .orElseThrow(() -> new UserDoesNotExistException(id));
     }
 
     @PutMapping("/users/{id}/friends/{friendId}")
