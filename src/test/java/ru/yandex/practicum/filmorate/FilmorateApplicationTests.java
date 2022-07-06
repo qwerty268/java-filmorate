@@ -70,7 +70,7 @@ class FilmorateApplicationTests {
                 LocalDate.of(2020, 2, 2),
                 Duration.ZERO,
                 new HashSet<>(),
-                List.of(Genre.CARTOON, Genre.ACTION),
+                List.of(),
                 new MPA(1));
         filmService.addFilm(film1);
 
@@ -80,7 +80,7 @@ class FilmorateApplicationTests {
                 LocalDate.of(2000, 2, 2),
                 Duration.ofHours(1),
                 new HashSet<>(),
-                List.of(Genre.DOCUMENTARY, Genre.ACTION),
+                List.of(),
                 new MPA(1));
         filmService.addFilm(film2);
     }
@@ -146,7 +146,7 @@ class FilmorateApplicationTests {
                 LocalDate.of(2023, 2, 2),
                 Duration.ZERO,
                 new HashSet<>(),
-                List.of(Genre.CARTOON, Genre.ACTION),
+                List.of(),
                 new MPA(1));
 
         filmService.updateFilm(film1);
